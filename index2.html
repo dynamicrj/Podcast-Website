@@ -1,0 +1,591 @@
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <title>
+   Dynamic RadioJack - The Termination Podcast
+  </title>
+  <script src="https://cdn.tailwindcss.com">
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+  <style>
+   body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      color: #f8fafc;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    a {
+      transition: color 0.3s ease;
+    }
+    .text-deepblue-600 {
+      color: #0ea5e9;
+    }
+    .text-deepblue-600:hover {
+      color: #3b82f6;
+    }
+    .text-red-accent {
+      color: #ef4444;
+    }
+    .text-red-accent:hover {
+      color: #f87171;
+    }
+    header, footer {
+      background: #111827;
+    }
+    .btn-red {
+      background-color: #ef4444;
+      color: white;
+      font-weight: 700;
+      box-shadow: 0 4px 14px 0 rgb(239 68 68 / 0.39);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .btn-red:hover {
+      background-color: #dc2626;
+      box-shadow: 0 6px 20px 0 rgb(220 38 38 / 0.6);
+      transform: scale(1.05);
+    }
+    input, textarea {
+      background-color: #1e293b;
+      border-color: #334155;
+      color: #f8fafc;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    input::placeholder, textarea::placeholder {
+      color: #94a3b8;
+    }
+    input:focus, textarea:focus {
+      border-color: #ef4444;
+      box-shadow: 0 0 0 3px rgb(239 68 68 / 0.4);
+      outline: none;
+      background-color: #1e293b;
+      color: #f8fafc;
+    }
+    audio {
+      outline: none;
+      border-radius: 0.5rem;
+      box-shadow: 0 4px 12px rgb(0 0 0 / 0.3);
+      width: 100%;
+      max-width: 100%;
+      transition: box-shadow 0.3s ease;
+    }
+    audio:hover, audio:focus {
+      box-shadow: 0 6px 20px rgb(239 68 68 / 0.7);
+    }
+    .episode-card {
+      background: #1e293b;
+      box-shadow: 0 8px 24px rgb(0 0 0 / 0.4);
+      border-radius: 1rem;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+      will-change: transform;
+    }
+    .episode-card:hover {
+      transform: translateY(-12px) scale(1.03);
+      box-shadow: 0 14px 40px rgb(239 68 68 / 0.8);
+      z-index: 10;
+    }
+    .rounded-xl {
+      border-radius: 1rem;
+    }
+    .shadow-md {
+      box-shadow: 0 4px 12px rgb(0 0 0 / 0.3);
+    }
+    .shadow-lg {
+      box-shadow: 0 10px 30px rgb(0 0 0 / 0.4);
+    }
+    .shadow-sm {
+      box-shadow: 0 1px 6px rgb(0 0 0 / 0.2);
+    }
+    .shadow {
+      box-shadow: 0 2px 8px rgb(0 0 0 / 0.25);
+    }
+    .shadow-red {
+      box-shadow: 0 0 15px 3px #ef4444aa;
+    }
+    .btn-red-shadow {
+      box-shadow: 0 0 15px 3px #ef4444aa;
+      transition: box-shadow 0.3s ease;
+    }
+    .btn-red-shadow:hover {
+      box-shadow: 0 0 25px 5px #dc2626cc;
+    }
+    .text-shadow {
+      text-shadow: 0 2px 6px rgba(239, 68, 68, 0.7);
+    }
+    .nav-link {
+      font-weight: 600;
+      color: #cbd5e1;
+      padding-bottom: 0.25rem;
+      border-bottom: 2px solid transparent;
+      transition: border-color 0.3s ease, color 0.3s ease;
+      position: relative;
+    }
+    .nav-link:hover {
+      color: #ef4444;
+      border-bottom-color: #ef4444;
+    }
+    .nav-link.active {
+      color: #ef4444;
+      border-bottom-color: #ef4444;
+      font-weight: 700;
+    }
+    /* Scrollbar for episode search input */
+    input::-webkit-scrollbar {
+      height: 8px;
+    }
+    input::-webkit-scrollbar-thumb {
+      background-color: #ef4444;
+      border-radius: 4px;
+    }
+    input::-webkit-scrollbar-track {
+      background-color: #1e293b;
+    }
+    /* Animate fade-in and slide-up */
+    .fade-slide-up {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+    .fade-slide-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    /* Pulsing animation for Start Listening button */
+    @keyframes pulseRed {
+      0%, 100% {
+        box-shadow: 0 0 15px 3px #ef4444aa;
+      }
+      50% {
+        box-shadow: 0 0 25px 6px #dc2626cc;
+      }
+    }
+    .btn-pulse {
+      animation: pulseRed 3s infinite;
+    }
+    /* Floating animation for podcast cover */
+    @keyframes floatUpDown {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-15px);
+      }
+    }
+    .float-animation {
+      animation: floatUpDown 6s ease-in-out infinite;
+    }
+    /* Smooth fade for header and footer */
+    header, footer {
+      transition: background-color 0.5s ease;
+    }
+  </style>
+ </head>
+ <body>
+  <header class="sticky top-0 z-50 shadow-lg">
+   <nav class="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
+    <a class="text-3xl font-extrabold text-deepblue-600 text-shadow" href="#home" id="navHome">
+     Dynamic RadioJack
+    </a>
+    <div class="hidden md:flex space-x-10">
+     <a class="nav-link active" href="#home" id="linkHome">
+      Home
+     </a>
+     <a class="nav-link" href="#episodes" id="linkEpisodes">
+      Episodes
+     </a>
+     <a class="nav-link" href="#about" id="linkAbout">
+      About
+     </a>
+    </div>
+    <button aria-label="Toggle Dark Mode" class="ml-4 text-gray-300 hover:text-red-accent transition text-2xl" id="darkModeToggle">
+     <i class="fas fa-moon">
+     </i>
+    </button>
+    <button aria-label="Toggle Menu" class="md:hidden ml-4 text-gray-300 hover:text-red-accent transition text-3xl" id="mobileMenuButton">
+     <i class="fas fa-bars">
+     </i>
+    </button>
+   </nav>
+   <div class="hidden md:hidden bg-gray-900 px-6 pb-6 space-y-6 font-semibold text-gray-300" id="mobileMenu">
+    <a class="block nav-link" href="#home" id="mLinkHome">
+     Home
+    </a>
+    <a class="block nav-link" href="#episodes" id="mLinkEpisodes">
+     Episodes
+    </a>
+    <a class="block nav-link" href="#about" id="mLinkAbout">
+     About
+    </a>
+   </div>
+  </header>
+  <main class="max-w-7xl mx-auto px-6 py-12 space-y-24">
+   <!-- Home Section -->
+   <section class="flex flex-col md:flex-row items-center md:items-start gap-12 md:gap-24 fade-slide-up" id="home">
+    <div class="flex-1 max-w-md text-center md:text-left">
+     <h1 class="text-5xl md:text-6xl font-extrabold text-deepblue-600 text-shadow leading-tight">
+      Dynamic RadioJack
+     </h1>
+     <p class="mt-3 text-xl font-semibold text-red-accent italic tracking-wide">
+      Unfiltered. Undeniable. Unbroken.
+     </p>
+     <p class="mt-8 text-gray-300 text-lg leading-relaxed font-medium">
+      Welcome to
+      <strong class="text-red-accent">
+       The Termination
+      </strong>
+      , a 12-episode solo storyteller podcast chronicling a journey of healing, resilience, and truth. Dive deep into stories that are raw, real, and undeniably human.
+     </p>
+     <a class="inline-block mt-10 px-10 py-4 btn-red rounded-xl shadow-lg btn-red-shadow btn-pulse hover:scale-105 transform transition" href="#episode-12" id="startListeningBtn">
+      Start Listening
+     </a>
+    </div>
+    <div class="flex-1 max-w-sm float-animation">
+     <img alt="Podcast cover art for The Termination featuring a bold red and black design with a silhouette of a person walking away from a burning bridge, symbolizing resilience and emotional journey" class="rounded-xl shadow-lg mx-auto border-4 border-red-accent" height="400" loading="lazy" src="https://storage.googleapis.com/a1aa/image/93b7cd33-8f2e-46b9-b896-d8764d29b085.jpg" width="400"/>
+     <div class="mt-10 bg-gray-800 rounded-xl shadow-lg p-7 border-2 border-red-accent">
+      <h2 class="text-2xl font-bold text-deepblue-600 mb-4 text-shadow">
+       Featured Episode
+      </h2>
+      <h3 class="font-semibold text-gray-200 mb-4 text-lg">
+       Episode 12: Thank You (The Final Word)
+      </h3>
+      <audio aria-label="Audio player for Episode 12: Thank You (The Final Word)" controls="" preload="none">
+       <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-12.mp3" type="audio/mpeg"/>
+       Your browser does not support the audio element.
+      </audio>
+     </div>
+    </div>
+   </section>
+   <!-- Episodes Section -->
+   <section class="space-y-10 fade-slide-up" id="episodes">
+    <h2 class="text-4xl font-extrabold text-center text-deepblue-600 text-shadow">
+     Episodes
+    </h2>
+    <div class="max-w-xl mx-auto">
+     <input aria-label="Search episodes by title or keyword" class="w-full px-5 py-4 rounded-xl border border-gray-700 bg-gray-900 text-gray-300 placeholder-gray-500 focus:outline-none focus:ring-4 focus:ring-red-accent focus:border-red-accent font-semibold text-lg" id="episodeSearch" placeholder="Search episodes by title or keyword..." type="text"/>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10" id="episodesGrid">
+     <!-- Episode Cards -->
+     <article class="episode-card p-6 flex flex-col" tabindex="0">
+      <img alt="Cover image for Episode 1: From Heartbreak to Head Held High, showing a broken heart mending with golden light" class="rounded-xl mb-5 object-cover h-44 w-full border-2 border-red-accent shadow-lg" height="220" loading="lazy" src="healing.jpeg" width="400"/>
+      <h3 class="text-xl font-bold text-red-accent mb-2">
+       Episode 1: From Heartbreak to Head Held High
+      </h3>
+      <p class="text-gray-300 flex-grow font-medium leading-relaxed">
+       The beginning of a painful journey, where heartbreak turns into strength and hope.
+      </p>
+      <audio aria-label="Audio player for Episode 1: From Heartbreak to Head Held High" class="mt-5" controls="" preload="none">
+       <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg"/>
+       Your browser does not support the audio element.
+      </audio>
+     </article>
+     <article class="episode-card p-6 flex flex-col" tabindex="0">
+      <img alt="Cover image for Episode 2: The Way Jessin Lit the Spark, showing a small flame igniting in darkness" class="rounded-xl mb-5 object-cover h-44 w-full border-2 border-red-accent shadow-lg" height="220" loading="lazy" src="Secret Friend.jpeg" width="400"/>
+      <h3 class="text-xl font-bold text-red-accent mb-2">
+       Episode 2: The Way My Secret Platonic Friend Lit the Spark
+      </h3>
+      <p class="text-gray-300 flex-grow font-medium leading-relaxed">
+       Exploring the moment SP ignited a new hope and passion in the story.
+      </p>
+      <audio aria-label="Audio player for Episode 2: The Way Jessin Lit the Spark" class="mt-5" controls="" preload="none">
+       <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" type="audio/mpeg"/>
+       Your browser does not support the audio element.
+      </audio>
+     </article>
+     <article class="episode-card p-6 flex flex-col" tabindex="0">
+      <img alt="Cover image for Episode 3: When Bobby Entered, showing a silhouette of a man entering a dimly lit room" class="rounded-xl mb-5 object-cover h-44 w-full border-2 border-red-accent shadow-lg" height="220" loading="lazy" src="https://storage.googleapis.com/a1aa/image/2cbd7f4d-515d-4b2e-f554-9675e1e9d5dc.jpg" width="400"/>
+      <h3 class="text-xl font-bold text-red-accent mb-2">
+       Episode 3: When Bobby Entered
+      </h3>
+      <p class="text-gray-300 flex-grow font-medium leading-relaxed">
+       Introducing Bobby and the impact his arrival had on the unfolding story.
+      </p>
+      <audio aria-label="Audio player for Episode 3: When Bobby Entered" class="mt-5" controls="" preload="none">
+       <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3" type="audio/mpeg"/>
+       Your browser does not support the audio element.
+      </audio>
+     </article>
+     <article class="episode-card p-6 flex flex-col" tabindex="0">
+      <img alt="Cover image for Episode 4: A Bridge Between the Fire and the Calm, showing a bridge over turbulent waters with a calm sky" class="rounded-xl mb-5 object-cover h-44 w-full border-2 border-red-accent shadow-lg" height="220" loading="lazy" src="FW.jpeg" width="400"/>
+      <h3 class="text-xl font-bold text-red-accent mb-2">
+       Episode 4: A Bridge Between the Fire and the Calm
+      </h3>
+      <p class="text-gray-300 flex-grow font-medium leading-relaxed">
+       Navigating the tension between chaos and peace in the emotional journey.
+      </p>
+      <audio aria-label="Audio player for Episode 4: A Bridge Between the Fire and the Calm" class="mt-5" controls="" preload="none">
+       <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3" type="audio/mpeg"/>
+       Your browser does not support the audio element.
+      </audio>
+     </article>
+     <article class="episode-card p-6 flex flex-col" tabindex="0">
+      <img alt="Cover image for Episode 5: Rumors, Rifts, and Resilience, showing broken glass with a red thread weaving through" class="rounded-xl mb-5 object-cover h-44 w-full border-2 border-red-accent shadow-lg" height="220" loading="lazy" src="Shut Up.jpeg" width="400"/>
+      <h3 class="text-xl font-bold text-red-accent mb-2">
+       Episode 5: Rumors, Rifts, and Resilience
+      </h3>
+      <p class="text-gray-300 flex-grow font-medium leading-relaxed">
+       Facing challenges and gossip while holding onto inner strength.
+      </p>
+      <audio aria-label="Audio player for Episode 5: Rumors, Rifts, and Resilience" class="mt-5" controls="" preload="none">
+       <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3" type="audio/mpeg"/>
+       Your browser does not support the audio element.
+      </audio>
+     </article>
+     <article class="episode-card p-6 flex flex-col" tabindex="0">
+      <img alt="Cover image for Episode 6: The Trip That Changed Everything, showing a winding road through mountains at sunset" class="rounded-xl mb-5 object-cover h-44 w-full border-2 border-red-accent shadow-lg" height="220" loading="lazy" src="https://storage.googleapis.com/a1aa/image/7449f38e-1827-411a-3e9d-4af0a83bbdfa.jpg" width="400"/>
+      <h3 class="text-xl font-bold text-red-accent mb-2">
+       Episode 6: The Trip That Changed Everything
+      </h3>
+      <p class="text-gray-300 flex-grow font-medium leading-relaxed">
+       A pivotal journey that altered the course of the story and emotions.
+      </p>
+      <audio aria-label="Audio player for Episode 6: The Trip That Changed Everything" class="mt-5" controls="" preload="none">
+       <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3" type="audio/mpeg"/>
+       Your browser does not support the audio element.
+      </audio>
+     </article>
+     <article class="episode-card p-6 flex flex-col" tabindex="0">
+      <img alt="Cover image for Episode 7: Sasha's Sword of Lies, showing a sword with a cracked blade surrounded by shadows" class="rounded-xl mb-5 object-cover h-44 w-full border-2 border-red-accent shadow-lg" height="220" loading="lazy" src="https://storage.googleapis.com/a1aa/image/23eee6c3-2d7c-4f27-03f7-5fd5b7665ef0.jpg" width="400"/>
+      <h3 class="text-xl font-bold text-red-accent mb-2">
+       Episode 7: Sword of Lies
+      </h3>
+      <p class="text-gray-300 flex-grow font-medium leading-relaxed">
+       Uncovering deception and betrayal that cut deep into the narrative.
+      </p>
+      <audio aria-label="Audio player for Episode 7: Sasha's Sword of Lies" class="mt-5" controls="" preload="none">
+       <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3" type="audio/mpeg"/>
+       Your browser does not support the audio element.
+      </audio>
+     </article>
+     <article class="episode-card p-6 flex flex-col" tabindex="0">
+      <img alt="Cover image for Episode 8: Bobby's Termination, My Realization, showing a door closing with a bright light behind" class="rounded-xl mb-5 object-cover h-44 w-full border-2 border-red-accent shadow-lg" height="220" loading="lazy" src="Terminationn.jpeg" width="400"/>
+      <h3 class="text-xl font-bold text-red-accent mb-2">
+       Episode 8: The Termination, My Realization
+      </h3>
+      <p class="text-gray-300 flex-grow font-medium leading-relaxed">
+       The moment of ending and the clarity that followed.
+      </p>
+      <audio aria-label="Audio player for Episode 8: Bobby's Termination, My Realization" class="mt-5" controls="" preload="none">
+       <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3" type="audio/mpeg"/>
+       Your browser does not support the audio element.
+      </audio>
+     </article>
+     <article class="episode-card p-6 flex flex-col" tabindex="0">
+      <img alt="Cover image for Episode 9: Jessin in Private, Jessin in Public, showing a split image of a person in shadow and in spotlight" class="rounded-xl mb-5 object-cover h-44 w-full border-2 border-red-accent shadow-lg" height="220" loading="lazy" src="https://storage.googleapis.com/a1aa/image/07b409ff-0023-4af5-8a33-9831ead47fe9.jpg" width="400"/>
+      <h3 class="text-xl font-bold text-red-accent mb-2">
+       Episode 9: Not to be True , Not to be False Ft. My SP Friend
+      </h3>
+      <p class="text-gray-300 flex-grow font-medium leading-relaxed">
+       Contrasting the hidden and visible sides of SP’s story.
+      </p>
+      <audio aria-label="Audio player for Episode 9: Jessin in Private, Jessin in Public" class="mt-5" controls="" preload="none">
+       <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3" type="audio/mpeg"/>
+       Your browser does not support the audio element.
+      </audio>
+     </article>
+     <article class="episode-card p-6 flex flex-col" tabindex="0">
+      <img alt="Cover image for Episode 10: End Credits, showing a film reel and closing credits style text" class="rounded-xl mb-5 object-cover h-44 w-full border-2 border-red-accent shadow-lg" height="220" loading="lazy" src="The End.jpeg" width="400"/>
+      <h3 class="text-xl font-bold text-red-accent mb-2">
+       Episode 10: End Credits
+      </h3>
+      <p class="text-gray-300 flex-grow font-medium leading-relaxed">
+       Reflecting on the journey and the people who made it possible.
+      </p>
+      <audio aria-label="Audio player for Episode 10: End Credits" class="mt-5" controls="" preload="none">
+       <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-10.mp3" type="audio/mpeg"/>
+       Your browser does not support the audio element.
+      </audio>
+     </article>
+     <article class="episode-card p-6 flex flex-col" tabindex="0">
+      <img alt="Cover image for Episode 11: The Curse Chapter, showing a dark book with glowing red runes" class="rounded-xl mb-5 object-cover h-44 w-full border-2 border-red-accent shadow-lg" height="220" loading="lazy" src="https://storage.googleapis.com/a1aa/image/4c654801-5c5b-4f12-c875-fcfbe78e0df6.jpg" width="400"/>
+      <h3 class="text-xl font-bold text-red-accent mb-2">
+       Episode 11: The Curse Chapter
+      </h3>
+      <p class="text-gray-300 flex-grow font-medium leading-relaxed">
+       Delving into the darkest moments and the weight of past mistakes.
+      </p>
+      <audio aria-label="Audio player for Episode 11: The Curse Chapter" class="mt-5" controls="" preload="none">
+       <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-11.mp3" type="audio/mpeg"/>
+       Your browser does not support the audio element.
+      </audio>
+     </article>
+     <article class="episode-card p-6 flex flex-col" id="episode-12" tabindex="0">
+      <img alt="Cover image for Episode 12: Thank You (The Final Word), showing a handwritten thank you note with a red heart" class="rounded-xl mb-5 object-cover h-44 w-full border-2 border-red-accent shadow-lg" height="220" loading="lazy" src="Thank You.jpeg" width="400"/>
+      <h3 class="text-xl font-bold text-red-accent mb-2">
+       Episode 12: Thank You (The Final Word)
+      </h3>
+      <p class="text-gray-300 flex-grow font-medium leading-relaxed">
+       The closing chapter, expressing gratitude and final reflections.
+      </p>
+      <audio aria-label="Audio player for Episode 12: Thank You (The Final Word)" class="mt-5" controls="" preload="none">
+       <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-12.mp3" type="audio/mpeg"/>
+       Your browser does not support the audio element.
+      </audio>
+     </article>
+    </div>
+   </section>
+   <!-- About Section -->
+   <section class="max-w-4xl mx-auto space-y-8 fade-slide-up" id="about">
+    <h2 class="text-4xl font-extrabold text-center text-deepblue-600 text-shadow">
+     About the Host
+    </h2>
+    <div class="flex flex-col md:flex-row items-center gap-12">
+     <img alt="Portrait of the podcast host, a thoughtful person with a warm smile, wearing casual clothes and sitting in a cozy room with soft lighting" class="rounded-full shadow-lg w-48 h-48 object-cover mx-auto md:mx-0 border-4 border-red-accent" height="200" loading="lazy" src="S pic.jpeg" width="200"/>
+     <div class="text-gray-300 font-medium text-lg leading-relaxed">
+      <p class="mb-6">
+       Hi, I’m..well you know me, the voice and heart behind
+       <em class="text-red-accent font-semibold">
+        The Termination
+       </em>
+       . This podcast is a personal journey through healing, resilience, and self-discovery. I believe in telling stories that are raw, honest, and deeply human.
+      </p>
+      <p>
+       The story behind
+       <em class="text-red-accent font-semibold">
+        The Termination
+       </em>
+       is one of emotional upheaval and ultimate strength. It’s about facing the end of something painful and finding the courage to move forward, unfiltered and unbroken.
+      </p>
+     </div>
+    </div>
+   </section>
+  </main>
+  <footer class="bg-gray-900 border-t border-gray-700 mt-20">
+   <div class="max-w-7xl mx-auto px-6 py-8 flex flex-col md:flex-row justify-between items-center space-y-6 md:space-y-0">
+    <nav class="flex space-x-8 text-gray-400 font-semibold text-lg">
+     <a class="hover:text-red-accent transition" href="#home">
+      Home
+     </a>
+     <a class="hover:text-red-accent transition" href="#episodes">
+      Episodes
+     </a>
+     <a class="hover:text-red-accent transition" href="#about">
+      About
+     </a>
+    </nav>
+    <div class="text-gray-500 text-sm select-none">
+     © 2024 Dynamic RadioJack. All rights reserved.
+    </div>
+    <div class="flex space-x-8 text-gray-400 text-3xl">
+     <a aria-label="YouTube" class="hover:text-red-accent transition" href="https://www.youtube.com/@Dynamic_RadioJack" rel="noopener" target="_blank">
+      <i class="fab fa-youtube">
+      </i>
+     </a>
+    </div>
+   </div>
+  </footer>
+  <script>
+   // Dark mode toggle
+    const darkModeToggle = document.getElementById('darkModeToggle');
+    const htmlElement = document.documentElement;
+    const darkIcon = '<i class="fas fa-moon"></i>';
+    const lightIcon = '<i class="fas fa-sun"></i>';
+
+    function setDarkMode(enabled) {
+      if (enabled) {
+        htmlElement.classList.add('dark');
+        darkModeToggle.innerHTML = lightIcon;
+        localStorage.setItem('darkMode', 'true');
+      } else {
+        htmlElement.classList.add('light');
+        darkModeToggle.innerHTML = darkIcon;
+        localStorage.setItem('darkMode', 'false');
+      }
+    }
+
+    // Initialize dark mode based on preference or localStorage
+    const savedDarkMode = localStorage.getItem('darkMode');
+    if (savedDarkMode === 'true' || (!savedDarkMode && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      setDarkMode(true);
+    } else {
+      setDarkMode(false);
+    }
+
+    darkModeToggle.addEventListener('click', () => {
+      setDarkMode(!htmlElement.classList.contains('dark'));
+    });
+
+    // Mobile menu toggle
+    const mobileMenuButton = document.getElementById('mobileMenuButton');
+    const mobileMenu = document.getElementById('mobileMenu');
+    mobileMenuButton.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+    });
+
+    // Episode search filter
+    const episodeSearchInput = document.getElementById('episodeSearch');
+    const episodeCards = document.querySelectorAll('.episode-card');
+
+    episodeSearchInput.addEventListener('input', () => {
+      const query = episodeSearchInput.value.toLowerCase();
+      episodeCards.forEach(card => {
+        const title = card.querySelector('h3').textContent.toLowerCase();
+        const description = card.querySelector('p').textContent.toLowerCase();
+        if (title.includes(query) || description.includes(query)) {
+          card.classList.remove('hidden');
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+    });
+
+    // Navigation active link highlight
+    const navLinks = document.querySelectorAll('nav a.nav-link');
+    const mobileNavLinks = document.querySelectorAll('#mobileMenu a.nav-link');
+    function setActiveLink(id) {
+      navLinks.forEach(link => {
+        if (link.id === id) {
+          link.classList.add('active');
+        } else {
+          link.classList.remove('active');
+        }
+      });
+      mobileNavLinks.forEach(link => {
+        if (link.id === 'm' + id.charAt(0).toUpperCase() + id.slice(1)) {
+          link.classList.add('active');
+        } else {
+          link.classList.remove('active');
+        }
+      });
+    }
+    // Smooth scroll and active link on click
+    navLinks.forEach(link => {
+      link.addEventListener('click', e => {
+        e.preventDefault();
+        const targetId = link.getAttribute('href').substring(1);
+        document.getElementById(targetId).scrollIntoView({behavior: 'smooth'});
+        setActiveLink(link.id);
+        if (!mobileMenu.classList.contains('hidden')) {
+          mobileMenu.classList.add('hidden');
+        }
+      });
+    });
+    mobileNavLinks.forEach(link => {
+      link.addEventListener('click', e => {
+        e.preventDefault();
+        const targetId = link.getAttribute('href').substring(1);
+        document.getElementById(targetId).scrollIntoView({behavior: 'smooth'});
+        setActiveLink(link.id.slice(1).toLowerCase());
+        mobileMenu.classList.add('hidden');
+      });
+    });
+
+    // Intersection Observer for fade-slide-up animations
+    const fadeElements = document.querySelectorAll('.fade-slide-up');
+    const observerOptions = {
+      threshold: 0.1
+    };
+    const fadeObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          fadeObserver.unobserve(entry.target);
+        }
+      });
+    }, observerOptions);
+    fadeElements.forEach(el => fadeObserver.observe(el));
+  </script>
+ </body>
+</html>
